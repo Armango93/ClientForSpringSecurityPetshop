@@ -49,20 +49,27 @@ public class MainActivity extends AppCompatActivity {
         enterPassword = findViewById(R.id.password);
         loginBtn = findViewById(R.id.log_in);
 
-
-        if(enterLogin.getText()!=null){
-            loginStr = enterLogin.getText().toString();
-        }
-
-        if(enterPassword.getText()!=null){
-            passwordStr = enterPassword.getText().toString();
-        }
+//        System.out.println(enterLogin.getText());
+//        if(enterLogin.getText()!=null){
+//            loginStr = enterLogin.getText().toString();
+//        }
+//
+//        if(enterPassword.getText()!=null){
+//            passwordStr = enterPassword.getText().toString();
+//        }
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(loginStr, passwordStr);
-                petList();
+                if (enterLogin.getText() == null || enterPassword.getText() == null) {
+                    Toast.makeText(MainActivity.this, "Enter login and password!", Toast.LENGTH_LONG);
+                } else {
+                    login(enterLogin.getText().toString(), enterPassword.getText().toString());
+                    System.out.println(loginStr + " " + passwordStr);
+//                petList();
+                }
+
+
             }
         });
 
@@ -84,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if (NetworkStatusChecker.isNetworkAvailable(this)) {
 
         Login login = new Login(loginString, password);
-
+            System.out.println(login.toString());
 
         Call<ResponseBody> call = mDataManager.getmUserClient().login(login);
         call.enqueue(new Callback<ResponseBody>() {
@@ -97,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
 //                    }
                     token = response.headers().get("access-token");
                     mDataManager.getmPreferencesManager().saveToken(token);
-                    Toast.makeText(MainActivity.this, response.headers().get("access-token"), Toast.LENGTH_SHORT).show();
-                    System.out.println();
+                    Toast.makeText(MainActivity.this, response.headers().get("access-token"), Toast.LENGTH_LONG).show();
+                    System.out.println(token+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    petList();
                 } else {
                     Toast.makeText(MainActivity.this, "Not Ok =(", Toast.LENGTH_SHORT).show();
                 }
